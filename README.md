@@ -10,12 +10,12 @@ impostos deduzidos do salário.
 
 **Funcionalidades
 
-1 - Adição de um empregado
-2 - Remoção de um empregado
-3 - Lançar um carte de ponto
-4 - Lançar uma taxa de serviço
-6 - Alterar detalhes de um empregado
-7 - Rodar a folha de pagamento para hoje
-8 - Undo/Redo
-9 - Agenda de pagamento
-10 - Criação de novas agendas de pagamento
+1 - Adição de um empregado\n
+2 - Remoção de um empregado.
+3 - Lançar um carte de ponto.
+4 - Lançar uma taxa de serviço.
+6 - Alterar detalhes de um empregado.
+7 - Rodar a folha de pagamento para hoje.
+8 - Undo/Redo.
+9 - Agenda de pagamento.
+10 - Criação de novas agendas de pagamento.
