@@ -10,7 +10,7 @@ impostos deduzidos do salário.
 
 **Funcionalidades
 
-1 - Adição de um empregado\n
+1 - Adição de um empregado.
 2 - Remoção de um empregado.
 3 - Lançar um carte de ponto.
 4 - Lançar uma taxa de serviço.
