@@ -1,49 +1,131 @@
-import random
+class Employee:
+    """representa o topo da hierarquia de empregado"""
 
-def emptyEmployees():
-    '''Cria e retorna uma lista vazia de empregados'''
+    def __init__(self, name='None', address='None', type='None', id=0):
+        self.name = name
+        self.address = address
+        self.type = type
+        self.id = id
 
-    employees = {}
-    return employees
+    def __repr__(self):
+        return f"('{self.name}', "\
+               f"'{self.address}', "\
+               f"'{self.type}', "\
+               f"{self.id}, "
 
-def addEmployee(employees):
-    '''Adiciona um novo empregado e seus dados'''
+    def __str__(self):
+        """retorna representação de string canônica"""
 
-    name = input("Digite o nome do novo empregado:\n")
-    adress = input("Digite o endereço:\n")
-    employeeType = input("Digite o tipo de empregado:\n")
-    atrib = input("Digite o salário:\n")
+        return f"('{self.name}', "\
+               f"'{self.address}', "\
+               f"'{self.type}', "\
+               f"{self.id}, "
+
+    def setName(self, name):
+        """define o nome do empregado"""
+        self.name = name
+
+    def setAddress(self, address):
+        """define o endereço do empregado"""
+        self.address = address
+
+    def setType(self, type):
+        """define o tipo do empregado"""
+        self.type = type
+
+    def getName(self):
+        """retorna o nome do empregado"""
+        return self.name
+
+    def getAddress(self):
+        """retorna o nome do empregado"""
+        return self.address
+
+    def getEmployeeType(self):
+        """retorna o tipo do empregado"""
+        return self.type
+
+    def getId(self):
+        """retorna o id do empregado"""
+        return self.id
+
+    def getData(self):
+        return f'Nome: {self.name}\n' \
+               f'Endereço: {self.address}\n' \
+               f'Tipo de empregado: {self.type}\n' \
+               f'Id: {self.id}\n'
 
 
-    if employees: #verifica se a lista de empregados está vazia
+class Hourly(Employee):
+    """representa empregado horista"""
 
-        id = random.randrange(0, 10000) #gera um id aleatório.
-        while True:
-            if id in employees.keys():  #verifica se o id gerado já está na lista
-                id = random.randrange(0, 10000) #caso esteja, gera um novo id.
-            else:
-                break
-    else:
-        id = 0
+    # estende o método __init__ da super classe
+    def __init__(self, name='None', address='None', type='None', id=0, hours=0):
+        super().__init__(name, address, type, id)
+        self.hours = hours
 
-    aux = {
-        id: [name, adress,
-        employeeType, atrib, id]} #dicionário auxiliar - serve como update para employees.
+    def getWorkingHours(self):
+        """retorna as horas de trabalho"""
+        return self.hours
 
-    employees.update(aux)         #atualiza a lista de empregados.
+    def getData(self):
+        return f"{super().getData()}" + \
+               f"Horas: {self.hours}"
 
-    print('\n..Empregado adicionado com sucesso')
-    print()
+    def __repr__(self):
+        return f"Hourly{super().__str__()}" + \
+               f"{self.hours})"
 
-def removeEmployee(employees):
-    '''Remove um empregado'''
+    def __str__(self):
+        return f"Hourly{super().__str__()}" + \
+               f"{self.hours})"
 
-    key = eval(input('Digite o id do empregado:\n'))
 
-    if key in employees.keys():
-        employees.pop(key)
-        print('\n..Empregado removido com sucesso')
-    else:
-        print('Empregado não encontrado')
+class Salaried(Employee):
+    """representa empregado salariado"""
 
-    print()
+    # estende o método __init__ da super classe
+    def __init__(self, name='None', address='None', type='None', id=0, salary=0):
+        super().__init__(name, address, type, id)
+        self.salary = salary
+
+    def getSalary(self):
+        """retorna salário do empregado"""
+        return self.salary
+
+    def getData(self):
+        return f"{super().getData()}" + \
+               f"Horas: {self.salary}"
+
+    def __repr__(self):
+        return f"Hourly{super().__str__()}" + \
+               f"{self.salary})"
+
+    def __str__(self):
+        return f"Hourly{super().__str__()}" + \
+               f"{self.salary})"
+
+
+class Commissioned(Employee):
+    """representa empregado comissionado"""
+
+    # estende o método __init__ da super classe
+    def __init__(self, name='None', address='None', type='None', id=0, commission=0):
+        super().__init__(name, address, type, id)
+        self.commission = commission
+
+    def getCommission(self):
+        """retorna comissão"""
+        return self.commission
+
+    def getData(self):
+        return f"{super().getData()}" + \
+               f"Horas: {self.commission}"
+
+    def __repr__(self):
+        return f"Hourly{super().__str__()}" + \
+               f"{self.commission})"
+
+    def __str__(self):
+        return f"Hourly{super().__str__()}" + \
+               f"{self.commission})"
