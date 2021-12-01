@@ -28,6 +28,7 @@ class Time:
             ratio = (36000, 3600, None, 600, 60, None, 10, 1)
             seconds = 0
             while True:
+                print(_hour)
                 try:
                     seconds += eval(_hour[index]) * ratio[index]
                 except SyntaxError:

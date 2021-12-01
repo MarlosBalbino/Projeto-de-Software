@@ -42,8 +42,8 @@ def main():
             caseHandle(case)
         except SyntaxError:
             print('Digite um número válido1')
-        except NameError:
-            print('Digite um número válido2')
+        # except NameError:
+        #     print('Digite um número válido2')
         except KeyError:
             print('Digite um número válido3')
 

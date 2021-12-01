@@ -90,8 +90,8 @@ def setTimeCard():
                 # CALCULA AS HORAS TRABALHADAS NO DIA
                 if len(timecards) % 2 != 0:
                     last_timecard = timecards[-1]  # pega o último cartão de ponto registrado
-                    h_final = last_timecard.split()[-1]  # obtém a hora final
-                    h_initial = new_timecard.split()[-1]  # obtém a hora inicial
+                    h_final = new_timecard.split()[-1]  # obtém a hora final
+                    h_initial = last_timecard.split()[-1]  # obtém a hora inicial
                     # Δh = hora_final - hora_inicial
                     h_final = Time(h_final)
                     h_initial = Time(h_initial)
