@@ -1,4 +1,4 @@
-class Employee:
+class __Employee:  # Private
     """representa o topo da hierarquia de empregado"""
 
     def __init__(self, name='None', address='None', type='None', id=0):
@@ -56,32 +56,50 @@ class Employee:
                f'Id: {self.id}\n'
 
 
-class Hourly(Employee):
+class Hourly(__Employee):
     """representa empregado horista"""
 
     # estende o método __init__ da super classe
-    def __init__(self, name='None', address='None', type='None', id=0, hours=0):
+    def __init__(self, name='None', address='None', type='None', id=0, hourlysalary=0, hours=0):
         super().__init__(name, address, type, id)
+        self.hourlysalary = hourlysalary
         self.hours = hours
+        self.extra_hours = 0
+
+    def setWorkingHours(self, hours):
+        """determina horas trabalhadas"""
+
+        self.hours += hours
 
     def getWorkingHours(self):
         """retorna as horas de trabalho"""
         return self.hours
 
+    def __extraWorkingHours(self):
+        """retorna as horas extras de trabalho"""
+        pass
+
+    def getHourlySalary(self):
+        """retorna salário horário"""
+        return self.hourlysalary
+
     def getData(self):
         return f"{super().getData()}" + \
-               f"Horas: {self.hours}"
+               f"Salário horário: R$ {self.hourlysalary:.2f}\n" \
+               f"Horas Trabalhadas: {self.hours} horas"
 
     def __repr__(self):
         return f"Hourly{super().__str__()}" + \
+               f"{self.hourlysalary}, " \
                f"{self.hours})"
 
     def __str__(self):
         return f"Hourly{super().__str__()}" + \
+               f"{self.hourlysalary}, " \
                f"{self.hours})"
 
 
-class Salaried(Employee):
+class Salaried(__Employee):
     """representa empregado salariado"""
 
     # estende o método __init__ da super classe
@@ -95,18 +113,18 @@ class Salaried(Employee):
 
     def getData(self):
         return f"{super().getData()}" + \
-               f"Horas: {self.salary}"
+               f"Salário: R$ {self.salary:.2f}"
 
     def __repr__(self):
-        return f"Hourly{super().__str__()}" + \
+        return f"Salaried{super().__str__()}" + \
                f"{self.salary})"
 
     def __str__(self):
-        return f"Hourly{super().__str__()}" + \
+        return f"Salaried{super().__str__()}" + \
                f"{self.salary})"
 
 
-class Commissioned(Employee):
+class Commissioned(__Employee):
     """representa empregado comissionado"""
 
     # estende o método __init__ da super classe
@@ -120,12 +138,12 @@ class Commissioned(Employee):
 
     def getData(self):
         return f"{super().getData()}" + \
-               f"Horas: {self.commission}"
+               f"Comissão: {self.commission}%"
 
     def __repr__(self):
-        return f"Hourly{super().__str__()}" + \
+        return f"Commissioned{super().__str__()}" + \
                f"{self.commission})"
 
     def __str__(self):
-        return f"Hourly{super().__str__()}" + \
+        return f"Commissioned{super().__str__()}" + \
                f"{self.commission})"

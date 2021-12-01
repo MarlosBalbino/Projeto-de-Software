@@ -1,24 +1,41 @@
 import os
 import time
+import data
 import random
 from employee import *
-from data import DataBase as data
+from mytime import Time
+
+
+def employeeInfo():
+    """returna uma lista com a classe e uma string indicando o tipo do empregado"""
+
+    while True:
+        opt = eval(input('Digite o tipo de empregado:\n'
+                         '1 - Horista\n'
+                         '2 - Salariado\n'
+                         '3 - Comissionado\n'))
+        if opt == 1:
+            return [Hourly, 'Horista', eval(input('Salário horário:\n'))]
+        elif opt == 2:
+            return [Salaried, 'Salariado', eval(input('Salário mensal:\n'))]
+        elif opt == 3:
+            return [Commissioned, 'Comissionado', eval(input('Comissão:\n'))]
+        else:
+            print('Tipo de empregado inválido, digite novamente:')
 
 
 def addEmployee():
     """adiciona um novo empregado ao banco de dados"""
-
     name = input('Digite o nome de um empregado\n')
     address = input('Digite o endereço\n')
-    empType = employeeType()  # recebe uma lista = [Tipo classe), Tipo em string)]
-    remuneration = eval(input('Digite o salário horário, salário mensal ou comissão:\n'))
+    empInfo = employeeInfo()  # recebe uma lista = [tipo (classe), tipo em string, Remuneração)]
 
     Id = random.randrange(100000)
-    while str(Id) in data.readFromDataBase(opt='Ids'):
+    while str(Id) in data.readFromDataBase(opt='Ids'):  # recebe uma lista com todas as Ids existentes
         Id = random.randrange(100000)
 
-    emp = empType[0](name, address, empType[1], Id, remuneration)
-    data.writeToDataBase(emp)
+    emp = empInfo[0](name, address, empInfo[1], Id, empInfo[2])
+    data.writeToDataBase(emp)  # escreve dados do empregado no banco de dados
     print('Empregado cadastrado com sucesso')
 
 
@@ -29,7 +46,7 @@ def removeEmployee():
     if Id != -1:
         opt = eval(input('Tem certeza que deseja remover esse empregado?\n'
                          '1 - Sim\n'
-                         '0 - Não'))
+                         '0 - Não\n'))
         if opt == 1:
             try:
                 os.remove(f'dataBase\\employees.db\\{Id}')
@@ -48,15 +65,42 @@ def setTimeCard():
     """lança um cartão de ponto"""
     Id = verifyEmployee()
     if Id != -1:
+
+        # LÊ EMPREGADO NO BANCO DE DADOS
+        file = open(f'dataBase\\employees.db\\{Id}', 'r', encoding='utf8')
+        emp = eval(file.read())
+        file.close()
+
+        # VERIFICA SE É DO TIPO HORÁRIO
+        if type(emp) != Hourly:
+            print('Esse empregado não é horista')
+            return None
+
         try:
-            timecard = time.strftime('%d/%m/%y %H:%M')
-            timeCardList = data.readFromDataBase(opt='timecards')
+            new_timecard = time.strftime('%d/%m/%y %H:%M')
+            timecardList = data.readTimeCardsFromDataBase(opt='timecards')
             timecards = []
-            if str(Id) in timeCardList:
+
+            # RECUPERA CARTÕES DE PONTO, CASO EXISTAM
+            if str(Id) in timecardList:
                 file = open(f'dataBase\\timecard.db\\{Id}', 'r', encoding='utf8')
                 timecards = file.read().splitlines()
                 file.close()
-            timecards.append(timecard)
+
+                # CALCULA AS HORAS TRABALHADAS NO DIA
+                if len(timecards) % 2 != 0:
+                    last_timecard = timecards[-1]  # pega o último cartão de ponto registrado
+                    h_final = last_timecard.split()[-1]  # obtém a hora final
+                    h_initial = new_timecard.split()[-1]  # obtém a hora inicial
+                    # Δh = hora_final - hora_inicial
+                    h_final = Time(h_final)
+                    h_initial = Time(h_initial)
+                    delta_h = h_final - h_initial
+                    emp.setWorkingHours(delta_h.getHours())
+                    data.writeToDataBase(emp)
+
+            # ADICIONA NOVO CARTÃO DE PONTO
+            timecards.append(new_timecard)
             data.writeTimeCardToDataBase(timecards, Id)
             print('Cartão de ponto adicionado com sucesso.')
 
@@ -70,9 +114,9 @@ def setSellResult():
     if Id != -1:
         try:
             sellresult = input('Forneça um comprovante de venda:\n')
-            sellResultList = data.readFromDataBase(opt='sellresults')
+            sellresultList = data.readSellResultsFromDataBase(opt='sellresults')
             sellresults = []
-            if str(Id) in sellResultList:
+            if str(Id) in sellresultList:
                 file = open(f'dataBase\\sellresults.db\\{Id}', 'r', encoding='utf8')
                 sellresults = file.read().splitlines()
                 file.close()
@@ -82,6 +126,11 @@ def setSellResult():
 
         except FileNotFoundError:
             print(FileNotFoundError('Não foi possível adicionar venda'))
+
+
+def setServiceRate():
+    """Lança uma taxa de serviço"""
+    pass
 
 
 def changeEmployeeData():
@@ -98,21 +147,23 @@ def changeEmployeeData():
             name = emp.getName()
             address = emp.getAddress()
             Type = emp.getEmployeeType()
-            auxType = []
+            empInfo = []
 
-            # armazena o tipo de empregado (classe) no índice 0 de auxType
+            # armazena as informações do tipo de empregado em empInfo
             if type(emp) == Hourly:
-                remuneration = emp.getWorkingHours()
-                auxType.append(Hourly)
-            elif type(emp) == Salaried:
-                remuneration = emp.Salary()
-                auxType.append(Salaried)
-            else:
-                remuneration = emp.Commission()
-                auxType.append(Commissioned)
+                empInfo.append(Hourly)
+                empInfo.append(Type)
+                empInfo.append(emp.getHourlySalary())
 
-            # armazena o tipo de empregado em string no índice 1 de auxType
-            auxType.append(Type)
+            elif type(emp) == Salaried:
+                empInfo.append(Salaried)
+                empInfo.append(Type)
+                empInfo.append(emp.getSalary())
+
+            else:
+                empInfo.append(Commissioned)
+                empInfo.append(Type)
+                empInfo.append(emp.getCommission())
 
             # INTERAÇÃO COM O USUÁRIO
             while True:
@@ -127,33 +178,39 @@ def changeEmployeeData():
                 elif opt == 2:
                     address = input('Digite um novo endereço:\n')
                 elif opt == 3:
-                    auxType = employeeType()  # recebe uma lista = [Tipo classe), Tipo em string)]
+                    empInfo = employeeInfo()  # recebe uma lista = [tipo (classe), tipo (em string), remuneração]
                 else:
                     break
 
             # ATUALIZA OS DADOS DOS EMPREGADOS
-            updatedEmp = auxType[0](name, address, auxType[1], Id, remuneration)
+            # empInfo[0]: tipo do empregado
+            # empInfo[1]: string do tipo do empregado
+            # empInfo[2]: remuneração
+            updatedEmp = empInfo[0](name, address, empInfo[1], Id, empInfo[2])
             data.writeToDataBase(updatedEmp)
 
         except FileNotFoundError:
             print(FileNotFoundError('Não foi possível alterar os dados do empregado'))
 
 
-def employeeType():
-    """returna uma lista com a classe e uma string indicando o tipo do empregado"""
-    employees = {1: [Hourly, 'Horista'],
-                 2: [Salaried, 'Salariado'],
-                 3: [Commissioned, 'Comissionado']}
-    while True:
-        try:
-            opt = eval(input('Digite o tipo de empregado:\n'
-                             '1 - Horista\n'
-                             '2 - Salariado\n'
-                             '3 - Comissionado\n'))
-            return employees[opt]
+def payRoll():
+    """roda a folha de pagamento"""
+    pass
 
-        except KeyError:
-            print('Tipo de empregado inválido')
+
+def UndoRedo():
+    """desfaz e refaz ação"""
+    pass
+
+
+def paymentSchedule():
+    """cria uma agenda de pagamento"""
+    pass
+
+
+def newPaymentSchedules():
+    """cria novas agendas de pagamento"""
+    pass
 
 
 def verifyEmployee():
@@ -177,7 +234,7 @@ def verifyEmployee():
 
         except:
             # caso empId seja um nome, procura todos os empregados de mesmo nome no banco de dados.
-            sameNameEmp = {}  # dicionário com empregados de mesmo nome.
+            sameNameEmp = {}  # dicionário para empregados de mesmo nome.
             for key in dataBase.keys():
                 emp = dataBase[key]
                 if empId == emp.getName():
@@ -203,26 +260,67 @@ def verifyEmployee():
 
 
 def printDataBase():
-    """imprime todos empregados"""
+    """imprime os dados dos empregados"""
+
+    # VERIFICA SE HÁ EMPREGADOS CADASTRADOS
     dataBase = data.readFromDataBase()
-    for key in dataBase:
-        print(f'{dataBase[key].getData()}\n')
+    if not dataBase:
+        print('Não há empregados cadastrados no sistema')
+        return None
+
+    # IMPRIME OS DADOS PESSOAIS DOS EMPREGADOS
+    for Id in dataBase:
+        print(f'{dataBase[Id].getData()}\n')
 
 
 def printTimeCards():
-    """imprime o cartão de ponto de todos os empregados"""
-    timeCards = data.readFromDataBase(opt='alltimecards')
-    for key in timeCards:
-        print(f'\n{key}:')
-        for timecard in timeCards[key]:
+    """imprime os cartões de ponto de todos os empregados"""
+
+    # VERIFICA SE HÁ EMPREGADOS CADASTRADOS
+    dataBase = data.readFromDataBase()
+    if not dataBase:
+        print('Não há empregados cadastrados no sistema')
+        return None
+
+    # VERIFICA SE HÁ CARTÕES DE PONTO
+    timeCards = data.readTimeCardsFromDataBase()
+    if not timeCards:
+        print('Não há cartões de ponto no sistema')
+        return None
+
+    # IMPRIME OS CARTÕES DE PONTO
+    for Id in timeCards:
+        emp = dataBase[Id]
+        print(f'\n{Id} : {emp.getName()}')
+        for timecard in timeCards[Id]:
             print(f'{timecard}')
     print()
 
 
+def printSellResults():
+    """imprime os resultados de vendas de todos os empregados"""
+
+    # VERIFICA SE HÁ EMPREGADOS CADASTRADOS
+    dataBase = data.readFromDataBase()
+    if not dataBase:
+        print('Não há empregados cadastrados no sistema')
+        return None
+
+    # VERIFICA SE HÁ RESULTADOS DE VENDAS
+    sellResults = data.readSellResultsFromDataBase()
+    if not sellResults:
+        print('Não há resultados de vendas no sistema')
+        return None
+
+    # IMPRIME OS RESULTADOS DE VENDAS
+    for Id in sellResults:
+        emp = dataBase[Id]
+        print(f'\n{Id} : {emp.getName()}')
+        for result in sellResults[Id]:
+            print(f'{result}')
+    print()
+
 
 if __name__ == "__main__":
-    #addEmployee()
-    print(verifyEmployee())
-    #changeEmployeeData()
-    # print(verifyEmployee())
+    pass
 
