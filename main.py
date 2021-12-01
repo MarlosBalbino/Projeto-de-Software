@@ -13,7 +13,7 @@ def caseHandle(case):
               5: setServiceRate,
               6: changeEmployeeData,
               7: payRoll,
-              8: UndoRedo,
+              8: undoRedo,
               9: paymentSchedule,
               10: newPaymentSchedules,
               11: printDataBase,
