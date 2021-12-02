@@ -1,0 +1,16 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>D:/UFAL/Projeto de Software/Projeto-de-Software/gui/icons/icons/email_ico.png</file>
+    <file>D:/UFAL/Projeto de Software/Projeto-de-Software/gui/icons/icons/githubico.png</file>
+    <file>D:/UFAL/Projeto de Software/Projeto-de-Software/gui/icons/icons/github2.png</file>
+    <file>D:/UFAL/Projeto de Software/Projeto-de-Software/gui/icons/icons/icon_logo_2.png</file>
+    <file>D:/UFAL/Projeto de Software/Projeto-de-Software/gui/icons/icons/mymenu.png</file>
+    <file>D:/UFAL/Projeto de Software/Projeto-de-Software/gui/icons/icons/menu.png</file>
+    <file>D:/UFAL/Projeto de Software/Projeto-de-Software/gui/icons/icons/menu1.png</file>
+    <file>D:/UFAL/Projeto de Software/Projeto-de-Software/gui/icons/icons/menu2.png</file>
+    <file>D:/UFAL/Projeto de Software/Projeto-de-Software/gui/icons/icons/mymenu.psd</file>
+    <file>D:/UFAL/Projeto de Software/Projeto-de-Software/gui/icons/icons/Sem Título-2.png</file>
+    <file>D:/UFAL/Projeto de Software/Projeto-de-Software/gui/icons/icons/whatsApp.png</file>
+    <file>D:/UFAL/Projeto de Software/Projeto-de-Software/gui/icons/icons/Youtube.png</file>
+  </qresource>
+</RCC>
