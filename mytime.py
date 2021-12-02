@@ -2,6 +2,13 @@ import time
 from datetime import timedelta
 
 
+class TimeError(Exception):
+    """Exceção é levantada quando
+    há uma diferença de tempo cujo o subtraendo é maior que o minuendo.
+    Ou seja, o resultado não pode ser negativo (tempo >= 0)"""
+    pass
+
+
 class Time:
     """classe de tempo definida pelo usuário"""
 
@@ -68,7 +75,9 @@ class Time:
     def __str__(self):
         return f'{str(timedelta(seconds=self.__seconds))}'
 
-    def __sub__(self, other):
+    def __sub__(self, h_initial):
         """subtrai as horas"""
-        return Time(str(timedelta(seconds=self.__seconds - other.__seconds)))
+        if h_initial.__seconds > self.__seconds:
+            raise TimeError('tempo final menor que o tempo inicial')
+        return Time(str(timedelta(seconds=self.__seconds - h_initial.__seconds)))
 

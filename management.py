@@ -198,7 +198,7 @@ def payRoll():
     pass
 
 
-def UndoRedo():
+def undoRedo():
     """desfaz e refaz ação"""
     pass
 
