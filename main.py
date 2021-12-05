@@ -6,6 +6,11 @@
 ################################################################################
 
 from management import *
+from dynamic_db import Initialize
+
+
+system = Initialize()
+system.started()
 
 
 def caseHandle(case):
@@ -50,6 +55,8 @@ def main():
         except KeyError:
             print('Digite um número válido3')
 
+
+system.finished()
 
 # manutenção e teste
 if __name__ == '__main__':
