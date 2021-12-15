@@ -6,11 +6,7 @@
 ################################################################################
 
 from management import *
-from dynamic_db import Initialize
-
-
-system = Initialize()
-system.started()
+import data
 
 
 def caseHandle(case):
@@ -31,6 +27,7 @@ def caseHandle(case):
 
 
 def main():
+    data.DynamicDataBase().read_db()
     while True:
         try:
             print(36 * '=')
@@ -55,8 +52,6 @@ def main():
         except KeyError:
             print('Digite um número válido3')
 
-
-system.finished()
 
 # manutenção e teste
 if __name__ == '__main__':

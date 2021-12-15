@@ -1,74 +1,80 @@
-import os
+from dataBase import DataBase
 from employee import *
 
-
-def writeToDataBase(employee):
-    """escreve os dados dos empregados no banco de dados"""
-    file = open(f'dataBase\\employees.db\\{employee.getId()}', 'w', encoding='utf8')
-    file.write(f"{employee}")
-    file.flush()
-    file.close()
+dynamic_db = {}
 
 
-def writeTimeCardToDataBase(timecards, Id):
-    """escreve o cartão de ponto no banco de dados"""
-    file = open(f'dataBase\\timecard.db\\{Id}', 'w', encoding='utf8')
-    for timecard in timecards:
-        file.write(f"{timecard}\n")
-    file.flush()
-    file.close()
+class DynamicDataBase:
 
+    def started(self):
+        """obtém os dados do banco de dados e armazena em um dicionário"""
 
-def writeSellToDataBase(sellresults, Id):
-    """escreve os resultados de vendas no banco de dados"""
-    file = open(f'dataBase\\sellresults.db\\{Id}', 'w', encoding='utf8')
-    for sell in sellresults:
-        file.write(f"{sell}\n")
-    file.flush()
-    file.close()
+        # CONECTA AO BANCO DE DADOS
+        self.db = DataBase()
+        self.db.connect()
 
+        # PERCORRE CADA EMPREGADO NO BANCO DE DADOS E OBTÉM SEUS RESPECTIVOS DADOS
+        for table in ['Hourly', 'Salaried', 'Commissioned']:
+            allEmployees = self.db.selectAllEmployees(table)
+            if allEmployees == -1:
+                continue
 
-def readFromDataBase(opt=None):
-    """lê os dados dos empregados no banco dados e os retorna em um dicionário"""
+            for employee_data in allEmployees:
+                name = employee_data[0]
+                address = employee_data[1]
+                emptype = employee_data[2]
+                Id = employee_data[3]
 
-    # APANHA APENAS AS IDS
-    if opt == 'getIds':
-        return os.listdir('dataBase\\employees.db')
+                emp = eval(table)(name, address, emptype, Id)
 
-    # APANHA TODOS OS DADOS PESSOAIS
-    dataBase = {}
-    for Id in os.listdir('dataBase\\employees.db'):  # lista todas as Ids presentes em dataBase\\employees.db
-        file = open(f'dataBase\\employees.db\\{Id}', 'r', encoding='utf8')  # abre o arquivo com o nome da Id
-        dataBase[eval(Id)] = eval(file.read())
+                # INSERE O OBJETO EMPREGADO NO DICIONÁRIO
+                dynamic_db[Id] = emp
+
+    @staticmethod
+    def read_db():
+        try:
+            file = open(f'dataBase\\employees.txt', 'r', encoding='utf8')
+            global dynamic_db
+            dynamic_db = eval(file.read())
+            file.close()
+        except FileNotFoundError:
+            pass
+
+    @staticmethod
+    def write_db():
+
+        file = open(f'dataBase\\employees.txt', 'w', encoding='utf8')
+        file.write(f"{dynamic_db}")
+        file.flush()
         file.close()
-    return dataBase
 
 
-def readTimeCardsFromDataBase(opt=None):
-    """lê os os cartões de ponto dos empregados no banco de dados e os retorna em um dicionário"""
 
-    if opt == 'timecards':
-        return os.listdir('dataBase\\timecard.db')
+    def finished(self):
+        """atualiza o banco de dados quando o sistema é encerrado"""
 
-    # APANHA OS CARTÕES DE PONTO DE TODOS OS EMPREGADOS
-    timeCards = {}
-    for Id in os.listdir('dataBase\\timecard.db'):  # lista todas as Ids presentes em dataBase\\timecard.db
-        file = open(f'dataBase\\timecard.db\\{Id}', 'r', encoding='utf8')  # abre o arquivo com o nome da Id
-        timeCards[eval(Id)] = file.read().splitlines()
-        file.close()
-    return timeCards
+        for key in dynamic_db.keys():
+            employeeData = []
+            # OBTÉM O OBJETO EMPREGADO DO DICIONÁRIO
+            emp = dynamic_db[key]
+
+            # OBTÉM OS DADOS DO EMPREGADO
+            employeeData.append(emp.getName())
+            employeeData.append(emp.getAddress())
+            employeeData.append(emp.getEmployeeType())
+            employeeData.append(emp.getId())
+
+            # JOGA OS DADOS ATUALIZADOS DO EMPREGADO NO BANCO DE DADOS
+            if type(emp) == Hourly:
+                self.db.updateEmployee(employeeData, 'Hourly')
+                self.db.registerEmployee(employeeData, 'Hourly')
+            elif type(emp) == Salaried:
+                self.db.updateEmployee(employeeData, 'Salaried')
+                self.db.registerEmployee(employeeData, 'Salaried')
+            else:
+                self.db.updateEmployee(employeeData, 'Commissioned')
+                self.db.registerEmployee(employeeData, 'Commissioned')
+
+        self.db.close_connection()
 
 
-def readSellResultsFromDataBase(opt=None):
-    """lê os resultados de vendas no banco de dados e os retorna em um dicionário"""
-
-    if opt == 'sellresults':
-        return os.listdir('dataBase\\sellresults.db')
-
-    # APANHA OS RESULTADOS DE VENDAS DE TODOS OS EMPREGADOS
-    sellResults = {}
-    for Id in os.listdir('dataBase\\sellresults.db'):  # lista todas as Ids presentes em dataBase\\timecard.db
-        file = open(f'dataBase\\sellresults.db\\{Id}', 'r', encoding='utf8')  # abre o arquivo com o nome da Id
-        sellResults[eval(Id)] = file.read().splitlines()
-        file.close()
-    return sellResults
