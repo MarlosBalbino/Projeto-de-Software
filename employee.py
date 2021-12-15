@@ -68,7 +68,6 @@ class Hourly(__Employee):
 
     def setWorkingHours(self, hours):
         """determina horas trabalhadas"""
-
         self.hours += hours
 
     def getWorkingHours(self):

@@ -1,74 +1,61 @@
-import os
 from employee import *
 
-
-def writeToDataBase(employee):
-    """escreve os dados dos empregados no banco de dados"""
-    file = open(f'dataBase\\employees.db\\{employee.getId()}', 'w', encoding='utf8')
-    file.write(f"{employee}")
-    file.flush()
-    file.close()
+dynamicDataBase = {}
+dynamicTimeCards = {}
+dynamicSellResults = {}
 
 
-def writeTimeCardToDataBase(timecards, Id):
-    """escreve o cartão de ponto no banco de dados"""
-    file = open(f'dataBase\\timecard.db\\{Id}', 'w', encoding='utf8')
-    for timecard in timecards:
-        file.write(f"{timecard}\n")
-    file.flush()
-    file.close()
+class DataBaseManager:
 
+    @staticmethod
+    def readDataBase():
+        try:
+            # LÊ OS DADOS DOS PESSOAIS DOS EMPREGADOS
+            dataBaseFile = open(f'dataBase\\employees.db', 'r', encoding='utf8')
+            global dynamicDataBase
+            dynamicDataBase = eval(dataBaseFile.read())
+            dataBaseFile.close()
 
-def writeSellToDataBase(sellresults, Id):
-    """escreve os resultados de vendas no banco de dados"""
-    file = open(f'dataBase\\sellresults.db\\{Id}', 'w', encoding='utf8')
-    for sell in sellresults:
-        file.write(f"{sell}\n")
-    file.flush()
-    file.close()
+            try:
+                # LÊ OS CARTÕES DE PONTO DOS HORISTAS
+                global dynamicTimeCards
+                timeCardFile = open(f'dataBase\\timecards.db', 'r', encoding='utf8')
+                dynamicTimeCards = eval(timeCardFile.read())
+                timeCardFile.close()
+            except FileNotFoundError:
+                pass
 
+            try:
+                # LÊ OS RESULTADOS DE VENDAS DOS COMISSIONADOS
+                global dynamicSellResults
+                sellResultsFile = open(f'dataBase\\sellresults.db', 'r', encoding='utf8')
+                dynamicSellResults = eval(sellResultsFile.read())
+                sellResultsFile.close()
+            except FileNotFoundError:
+                pass
 
-def readFromDataBase(opt=None):
-    """lê os dados dos empregados no banco dados e os retorna em um dicionário"""
+        except FileNotFoundError:
+            pass
 
-    # APANHA APENAS AS IDS
-    if opt == 'getIds':
-        return os.listdir('dataBase\\employees.db')
-
-    # APANHA TODOS OS DADOS PESSOAIS
-    dataBase = {}
-    for Id in os.listdir('dataBase\\employees.db'):  # lista todas as Ids presentes em dataBase\\employees.db
-        file = open(f'dataBase\\employees.db\\{Id}', 'r', encoding='utf8')  # abre o arquivo com o nome da Id
-        dataBase[eval(Id)] = eval(file.read())
+    @staticmethod
+    def writeDataBase():
+        file = open(f'dataBase\\employees.db', 'w', encoding='utf8')
+        file.write(f"{dynamicDataBase}")
+        file.flush()
         file.close()
-    return dataBase
 
-
-def readTimeCardsFromDataBase(opt=None):
-    """lê os os cartões de ponto dos empregados no banco de dados e os retorna em um dicionário"""
-
-    if opt == 'timecards':
-        return os.listdir('dataBase\\timecard.db')
-
-    # APANHA OS CARTÕES DE PONTO DE TODOS OS EMPREGADOS
-    timeCards = {}
-    for Id in os.listdir('dataBase\\timecard.db'):  # lista todas as Ids presentes em dataBase\\timecard.db
-        file = open(f'dataBase\\timecard.db\\{Id}', 'r', encoding='utf8')  # abre o arquivo com o nome da Id
-        timeCards[eval(Id)] = file.read().splitlines()
+    @staticmethod
+    def writeTimeCard():
+        file = open(f'dataBase\\timecards.db', 'w', encoding='utf8')
+        file.write(f"{dynamicTimeCards}")
+        file.flush()
         file.close()
-    return timeCards
 
-
-def readSellResultsFromDataBase(opt=None):
-    """lê os resultados de vendas no banco de dados e os retorna em um dicionário"""
-
-    if opt == 'sellresults':
-        return os.listdir('dataBase\\sellresults.db')
-
-    # APANHA OS RESULTADOS DE VENDAS DE TODOS OS EMPREGADOS
-    sellResults = {}
-    for Id in os.listdir('dataBase\\sellresults.db'):  # lista todas as Ids presentes em dataBase\\timecard.db
-        file = open(f'dataBase\\sellresults.db\\{Id}', 'r', encoding='utf8')  # abre o arquivo com o nome da Id
-        sellResults[eval(Id)] = file.read().splitlines()
+    @staticmethod
+    def writeSellResults():
+        file = open(f'dataBase\\sellresults.db', 'w', encoding='utf8')
+        file.write(f"{dynamicSellResults}")
+        file.flush()
         file.close()
-    return sellResults
+
+
