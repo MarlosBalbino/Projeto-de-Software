@@ -5,24 +5,24 @@
 ##
 ################################################################################
 
-from management import *
-import data
+from dataBase import data
+from management.Imports import *
 
 
 def caseHandle(case):
-    switch = {1: addEmployee,
-              2: removeEmployee,
-              3: setTimeCard,
-              4: setSellResult,
-              5: setServiceRate,
-              6: changeEmployeeData,
-              7: payRoll,
-              8: undoRedo,
-              9: paymentSchedule,
-              10: newPaymentSchedules,
-              11: printDataBase,
-              12: printTimeCards,
-              13: printSellResults}
+    switch = {1: EmployeeCRUD.add,
+              2: EmployeeCRUD.remove,
+              3: TimeCard.setTimeCard,
+              4: SellResult.setSellResult,
+              # 5: setServiceRate,
+              6: EmployeeCRUD.update,
+              # 7: payRoll,
+              # 8: undoRedo,
+              # 9: paymentSchedule,
+              # 10: newPaymentSchedules,
+              11: PrintData.printDataBase,
+              12: PrintData.printTimeCards,
+              13: PrintData.printSellResults}
     switch[case]()
 
 
@@ -46,11 +46,11 @@ def main():
                 break
             caseHandle(case)
         except SyntaxError:
-            print('Digite um número válido1')
-        # except NameError:
-        #     print('Digite um número válido2')
+            print('Digite um número válido.\nErro #1')
+        except NameError:
+            print('Digite um número válido.\nErro #2')
         except KeyError:
-            print('Digite um número válido3')
+            print('Digite uma das opções acima.')
 
 
 # manutenção e teste
