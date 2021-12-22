@@ -1,5 +1,9 @@
-from management.fill_data.employeeFillData import *
-from management.verifyEmployee import verifyEmployee
+from management.fill_employee_data.fillData import *
+from management.fill_employee_data.updateOptions import Change
+from management.fill_employee_data.removeOptions import Remove
+from management.extraModules.verifyEmployee import verifyEmployee
+from management.extraModules.exit import ZeroError
+from dataBase import data
 
 
 class EmployeeCRUD:
@@ -15,10 +19,22 @@ class EmployeeCRUD:
         class_ = fill.getClass()
         Id = fill.getId()
         employee = class_(name, address, type_, Id)
-        employee = EmployeeCRUD.specialAttrib(class_, employee)
+        employee = SpecialAttrib.attrib(class_, employee)
+
+        fill.setPayment()
+        payment = fill.getPayment()
+        employee.setPayment(payment)
+
+        fill.setSyndicate(contained=0)
+        syndicate = fill.getSyndicate()
+        employee.setSyndicate(syndicate)
 
         data.dynamicDataBase[Id] = employee  # escreve dados do novo empregado no banco de dados dinâmico.
         data.DataBaseManager.writeDataBase()  # escreve os dados no banco de dados.
+
+        if syndicate == 1:
+            fill = FillSyndicate(Id)
+            fill.signIn(Id)
 
         print('Empregado cadastrado com sucesso!!')
 
@@ -32,15 +48,11 @@ class EmployeeCRUD:
                              '1 - Sim\n'
                              '0 - Não\n'))
             if opt == 1:
-                try:
-                    data.dynamicDataBase.pop(Id)
-                    data.DataBaseManager.writeDataBase()
-                    print('Empregado removido com sucesso')
-                except:
-                    print(f"Erro: não foi possível remover o empregado")
-
-                # implementar remoção de cartão de ponto e resultado de vendas
-
+                Remove.employeeData(Id)
+                Remove.timeCardsData(Id)
+                Remove.sellResultsData(Id)
+                Remove.syndicateData(Id)
+                Remove.scheduleData(Id)
             else:
                 print('Operação abortada!')
 
@@ -52,34 +64,31 @@ class EmployeeCRUD:
         if Id != -1:
             try:
                 employee = data.dynamicDataBase[Id]
-                # RECUPERA DADOS DO EMPREGADO
-                name = employee.getName()
-                address = employee.getAddress()
 
                 # INTERAÇÃO COM O USUÁRIO
                 while True:
-                    opt = eval(input('Digite a opção que deseja alterar:\n'
-                                     '1 - nome:\n'
-                                     '2 - endereço:\n'
-                                     '3 - tipo de empregado:\n'
-                                     '0 - sair:\n'))
+                    try:
+                        case = eval(input('Digite a opção que deseja alterar:\n'
+                                          '1 - nome:\n'
+                                          '2 - endereço:\n'
+                                          '3 - tipo de empregado:\n'
+                                          '4 - forma de pagamento:\n'
+                                          '5 - sair ou entrar no sindicato:\n'
+                                          '6 - identificação no sindicato:\n'
+                                          '7 - taxa sindical:\n'
+                                          '0 - sair:\n'))
 
-                    fill = FillEmployee(init=0)
-                    if opt == 1:
-                        fill.setName()
-                        name = fill.getName()
-                        employee.setName(name)
-                    elif opt == 2:
-                        fill.setAddress()
-                        address = fill.getAddress()
-                        employee.setAddress(address)
-                    elif opt == 3:
-                        fill.setInfo()
-                        class_ = fill.getClass()
-                        type_ = fill.getType()
-                        employee = class_(name, address, type_, Id)
-                        employee = EmployeeCRUD.specialAttrib(class_, employee)
-                    else:
+                        changer = Change(employee)
+                        changer.switch(case)
+                        employee = changer.getEmployee()
+
+                    except SyntaxError:
+                        print('Digite um número válido.\nErro #3')
+                    except NameError:
+                        print('Digite um número válido.\nErro #4')
+                    except KeyError:
+                        print('Digite uma das opções acima #1.')
+                    except ZeroError:
                         break
 
                 # ATUALIZA OS DADOS DOS EMPREGADOS
@@ -91,17 +100,16 @@ class EmployeeCRUD:
                 print('Não foi possível alterar os dados do empregado')
 
     @staticmethod
-    def specialAttrib(class_, employee):
-        if class_ == Hourly:
-            fill = FillHourly()
-            employee.hourlysalary = fill.getHourlySalary()
-
-        elif class_ == Salaried:
-            fill = FillSalaried()
-            employee.salary = fill.getSalary()
+    def eraseDataBase():
+        opt = eval(input('Tem certeza que deseja apagar o banco de dados?\n'
+                         '1 - Sim. 0 - Não.\n'))
+        if opt == 1:
+            opt = eval(input('Todos os dados serão apagados permanentemente. Deseja continuar mesmo assim?\n'
+                             '1 - Sim. 0 - Não.\n'))
+            if opt == 1:
+                data.DataBaseManager.eraseDataBase()
+                print('Os dados foram deletados!!!')
+            else:
+                print('Operação abortada.')
         else:
-            fill = FillCommissioned()
-            employee.salary = fill.getSalary()
-            employee.percentage = fill.getPercentage()
-
-        return employee
+            print('Operação abortada.')

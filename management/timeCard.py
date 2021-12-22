@@ -1,14 +1,21 @@
 import time
 from dataBase import data
-from management.mytime import Time
 from employee.hourly import Hourly
-from management.verifyEmployee import verifyEmployee
+from management.extraModules.mytime import Time
+from management.fill_employee_data.fillData import FillHourly
+from management.extraModules.verifyEmployee import verifyEmployee
 
 
 class TimeCard:
     @staticmethod
     def calcWorkingHours(timecards, new_timecard, employee):
         Id = employee.getId()
+
+        def calcExtraWorkingHours(delta_h):
+            extra_h = 0
+            if delta_h > 8:
+                extra_h = delta_h - 8
+            return extra_h
 
         # CALCULA AS HORAS TRABALHADAS NO DIA
         if len(timecards) % 2 != 0:
@@ -19,7 +26,9 @@ class TimeCard:
             h_final = Time(h_final)
             h_initial = Time(h_initial)
             delta_h = h_final - h_initial
+            extra_h = calcExtraWorkingHours(delta_h)
             employee.setWorkingHours(delta_h.getHours())
+            employee.setExstraWorkingHours(extra_h)
             data.dynamicDataBase[Id] = employee
             data.DataBaseManager.writeDataBase()
 
@@ -50,3 +59,37 @@ class TimeCard:
 
             except:
                 print('Não foi possível lançar cartão de ponto.')
+
+    @staticmethod
+    def setHours():
+        Id = verifyEmployee()
+        if Id != -1:
+            employee = data.dynamicDataBase[Id]
+            if type(employee) != Hourly:
+                print('Esse empregado não é horista.')
+                return None
+
+            fill = FillHourly(init=0)
+            fill.setWorkingHours()
+            hours = fill.getWorkingHours()
+
+            employee.setWorkingHours(hours)
+            data.dynamicDataBase[Id] = employee
+            data.DataBaseManager.writeDataBase()
+
+    @staticmethod
+    def setExtra():
+        Id = verifyEmployee()
+        if Id != -1:
+            employee = data.dynamicDataBase[Id]
+            if type(employee) != Hourly:
+                print('Esse empregado não é horista.')
+                return None
+
+            fill = FillHourly(init=0)
+            fill.setExtraWorkingHours()
+            extra_h = fill.getExtraWorkingHours()
+
+            employee.setExstraWorkingHours(extra_h)
+            data.dynamicDataBase[Id] = employee
+            data.DataBaseManager.writeDataBase()

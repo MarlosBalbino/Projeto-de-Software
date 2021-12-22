@@ -1,7 +1,7 @@
 from dataBase import data
 import time
 from employee.commissioned import Commissioned
-from management.verifyEmployee import verifyEmployee
+from management.extraModules.verifyEmployee import verifyEmployee
 
 
 class SellResult:
@@ -18,13 +18,22 @@ class SellResult:
 
             try:
                 sell = eval(input('Digite o valor da venda:\n'))
-                sellResult = time.strftime('%d/%m/%y %H:%M:%S') + '  R$' + str(sell)
-                data.dynamicSellResults[Id] = sellResult
+                new_sellresult = time.strftime('%d/%m/%y %H:%M:%S') + '  R$ ' + str(sell)
+                sellresults = []
+                if Id in data.dynamicSellResults:
+                    sellresults = data.dynamicSellResults[Id]
 
-                percentage = employee.percentage()
-                commission = (percentage/100) * sell
-                employee.setCommission(commission)
+                sellresults.append(new_sellresult)
+                data.dynamicSellResults[Id] = sellresults
+                data.DataBaseManager.writeSellResults()
+
+                commission = employee.getCommission()
+                periodCommission = (commission/100) * sell
+                employee.setPeriodCommission(periodCommission)
                 data.dynamicDataBase[Id] = employee
+                data.DataBaseManager.writeDataBase()
+
+                print('Resultado de venda adicionado com sucesso!!')
 
             except:
                 print('Não foi possível lançar resultado de venda!!')

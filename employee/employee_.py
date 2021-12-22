@@ -1,18 +1,21 @@
 class __Employee:  # Private
     """representa o topo da hierarquia de empregado"""
 
-    def __init__(self, name='None', address='None', type='None', id=0):
+    def __init__(self, name='None', address='None', type='None', id=0, syndicate=0, payment='None'):
         self.name = name
         self.address = address
         self.type = type
         self.id = id
-        self.syndicate = 0
+        self.syndicate = syndicate
+        self.payment = payment
 
     def _repr(self):
         return f"'{self.name}', "\
                f"'{self.address}', "\
                f"'{self.type}', "\
-               f"{self.id}"
+               f"{self.id}, " \
+               f"{self.syndicate}, " \
+               f"'{self.payment}'"
 
     def __repr__(self):
         return f"Employee({self._repr()})"
@@ -33,6 +36,10 @@ class __Employee:  # Private
         """define o tipo do empregado"""
         self.type = type
 
+    def setPayment(self, payment):
+        """determina a forma de pagamento"""
+        self.payment = payment
+
     def getName(self):
         """retorna o nome do empregado"""
         return self.name
@@ -49,15 +56,25 @@ class __Employee:  # Private
         """retorna o id do empregado"""
         return self.id
 
-    def setSyndicate(self):
-        self.syndicate = 1
+    def setSyndicate(self, syndicate):
+        self.syndicate = syndicate
 
     def getSyndicate(self):
         return self.syndicate
+
+    def getPayment(self):
+        return self.payment
+
+    def __belongsSyndicate(self):
+        if self.syndicate == 1:
+            return 'Sim'
+        else:
+            return 'Não'
 
     def getData(self):
         return f'Nome: {self.name}\n' \
                f'Endereço: {self.address}\n' \
                f'Tipo de empregado: {self.type}\n' \
                f'Id: {self.id}\n' \
-               f'Pertence ao sindicato: {self.syndicate}'
+               f'Pertence ao sindicato: {self.__belongsSyndicate()}\n' \
+               f'Forma de pagamento: {self.payment}\n'

@@ -5,8 +5,9 @@ class Hourly(__Employee):
     """representa empregado horista"""
 
     # estende o método __init__ da super classe
-    def __init__(self, name='None', address='None', type='None', id=0, hourlysalary=0, hours=0):
-        super().__init__(name, address, type, id)
+    def __init__(self, name='None', address='None', type='None', id=0, syndicate=0, payment='None',
+                 hourlysalary=0, hours=0):
+        super().__init__(name, address, type, id, syndicate, payment)
         self.hourlysalary = hourlysalary
         self.hours = hours
         self.extra_hours = 0
@@ -14,6 +15,9 @@ class Hourly(__Employee):
     def setWorkingHours(self, hours):
         """determina horas trabalhadas"""
         self.hours += hours
+
+    def setExtraWorkingHours(self, hours):
+        self.extra_hours += hours
 
     def setHourlySalary(self, hourlysalary):
         """determina o salário horário"""
@@ -23,9 +27,9 @@ class Hourly(__Employee):
         """retorna as horas de trabalho"""
         return self.hours
 
-    def extraWorkingHours(self):
+    def getExtraWorkingHours(self):
         """retorna as horas extras de trabalho"""
-        pass
+        return self.extra_hours
 
     def getHourlySalary(self):
         """retorna salário horário"""
@@ -34,7 +38,8 @@ class Hourly(__Employee):
     def getData(self):
         return f"{super().getData()}" + \
                f"Salário horário: R$ {self.hourlysalary:.2f}\n" \
-               f"Horas Trabalhadas: {self.hours} horas"
+               f"Horas trabalhadas: {self.hours} horas\n" \
+               f"Horas extras: {self.extra_hours}"
 
     def _repr(self):
         return f"{super()._repr()}, " + \
