@@ -3,7 +3,7 @@ from employee.Imports import *
 from management.extraModules.mycalendar import Calendar
 from management.paycheck.paycheck import Paycheck
 from management.extraModules.findInSyndicate import FindSyndicate
-from management.undoRedo import UndoRedo
+from os import system
 
 
 class PayRoll:
@@ -72,6 +72,7 @@ class PayRoll:
         print()
         dt.paycheckDB[Id] = paycheck
         dt.DataBaseManager.writePaycheckDB()
+        system('pause')
 
     @classmethod
     def __weekly(cls, day, Id):
@@ -105,6 +106,7 @@ class PayRoll:
             switch[scheduleType](day, Id)
         if cls.payed == 0:
             print('Não há nem um pagamento agendado pra hoje.')
+            system('pause')
             return None
         return 1
 

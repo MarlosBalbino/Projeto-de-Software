@@ -29,4 +29,4 @@ class CaseHandle:
                   0: Exit.end}
         done = switch[case]()
         if done is not None:
-            return -1
+            return 1

@@ -2,6 +2,7 @@ from management.extraModules.exit import Exit
 from management.fill_employee_data.fillData import *
 from management.fill_employee_data.removeOptions import Remove
 from management.extraModules.findInSyndicate import FindSyndicate
+from os import system
 
 
 class Change:
@@ -84,7 +85,8 @@ class Change:
             data.dynamicSyndicateDB[syndicateId] = syndicateEmp
             data.DataBaseManager.writeSyndicateDB()
         else:
-            print('Esse empregado não está vinculado ao sindicato.')
+            print('\nEsse empregado não está vinculado ao sindicato.')
+            system('pause')
 
     def __unionFee(self):
         """altera a taxa sindical"""
@@ -98,7 +100,8 @@ class Change:
             data.dynamicSyndicateDB[syndicateEmp.getSyndicateId()] = syndicateEmp
             data.DataBaseManager.writeSyndicateDB()
         else:
-            print('Esse empregado não está vinculado ao sindicato.')
+            print('\nEsse empregado não está vinculado ao sindicato.')
+            system('pause')
 
     def switch(self, case):
         switch = {1: self.__name,

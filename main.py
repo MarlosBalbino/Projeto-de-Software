@@ -8,7 +8,7 @@ from dataBase import data
 from management.extraModules.exit import ZeroError
 from management.caseHandle import CaseHandle
 from management.undoRedo import UndoRedo
-import os
+from os import system
 
 
 class Main:
@@ -19,7 +19,8 @@ class Main:
         UndoRedo.saveState()
         while True:
             try:
-                print(45*'=')
+                system('cls')
+                print(f"{19*'='} Menu {20*'='}\n")
                 case = eval(input('1 - Adicionar empregado\n'
                                   '2 - Remover empregado\n'
                                   '3 - Lançar cartão de ponto\n'
@@ -39,7 +40,7 @@ class Main:
                                   '17 - Desfazer\n'
                                   '18 - Refazer\n'
                                   '0 - sair\n'))
-                print(45*'=')
+                system('cls')
                 done = CaseHandle.switch(case)
                 if done is not None:
                     UndoRedo.saveState()

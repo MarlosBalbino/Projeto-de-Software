@@ -1,5 +1,4 @@
 from employee.Imports import *
-from management.linkedlist.linkedList import LinkedList
 import os
 
 dynamicDataBase = {}

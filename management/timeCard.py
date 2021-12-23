@@ -4,7 +4,7 @@ from employee.hourly import Hourly
 from management.extraModules.mytime import Time
 from management.fill_employee_data.fillData import FillHourly
 from management.extraModules.verifyEmployee import verifyEmployee
-from management.undoRedo import UndoRedo
+from os import system
 
 
 class TimeCard:
@@ -36,11 +36,14 @@ class TimeCard:
     @staticmethod
     def setTimeCard():
         """lança um cartão de ponto"""
+        print(f"{16 * '='} Cartão de ponto {16 * '='}")
+
         Id = verifyEmployee()
         if Id != -1:
             employee = data.dynamicDataBase[Id]
             if type(employee) != Hourly:
-                print('Esse empregado não é horista.')
+                print('Esse empregado não é horista.\n')
+                system('pause')
                 return None
 
             try:
@@ -56,11 +59,13 @@ class TimeCard:
                 timecards.append(new_timecard)
                 data.dynamicTimeCards[Id] = timecards
                 data.DataBaseManager.writeTimeCard()
-                print('Cartão de ponto adicionado com sucesso!!')
+                print('Cartão de ponto adicionado com sucesso!!\n')
+                system('pause')
                 return 1
 
             except:
-                print('Não foi possível lançar cartão de ponto.')
+                print('Não foi possível lançar cartão de ponto.\n')
+        system('pause')
 
     @staticmethod
     def setHours():
@@ -68,7 +73,8 @@ class TimeCard:
         if Id != -1:
             employee = data.dynamicDataBase[Id]
             if type(employee) != Hourly:
-                print('Esse empregado não é horista.')
+                print('Esse empregado não é horista.\n')
+                system('pause')
                 return None
 
             fill = FillHourly(init=0)
@@ -78,6 +84,7 @@ class TimeCard:
             employee.setWorkingHours(hours)
             data.dynamicDataBase[Id] = employee
             data.DataBaseManager.writeDataBase()
+        system('pause')
 
     @staticmethod
     def setExtra():
@@ -85,7 +92,8 @@ class TimeCard:
         if Id != -1:
             employee = data.dynamicDataBase[Id]
             if type(employee) != Hourly:
-                print('Esse empregado não é horista.')
+                print('Esse empregado não é horista.\n')
+                system('pause')
                 return None
 
             fill = FillHourly(init=0)
@@ -95,3 +103,4 @@ class TimeCard:
             employee.setExtraWorkingHours(extra_h)
             data.dynamicDataBase[Id] = employee
             data.DataBaseManager.writeDataBase()
+        system('pause')

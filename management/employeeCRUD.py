@@ -3,8 +3,8 @@ from management.fill_employee_data.updateOptions import Change
 from management.fill_employee_data.removeOptions import Remove
 from management.extraModules.verifyEmployee import verifyEmployee
 from management.extraModules.exit import ZeroError
-from management.undoRedo import UndoRedo
 from dataBase import data
+from os import system
 
 
 class EmployeeCRUD:
@@ -12,6 +12,7 @@ class EmployeeCRUD:
     @staticmethod
     def add():
         """adiciona um novo empregado ao banco de dados"""
+        print(f"{13 * '='} Novo empregado {14 * '='}\n")
 
         fill = FillEmployee()
         name = fill.getName()
@@ -37,13 +38,15 @@ class EmployeeCRUD:
             fill = FillSyndicate(Id)
             fill.signIn(Id)
 
-        print('Empregado cadastrado com sucesso!!')
+        print('\nEmpregado cadastrado com sucesso!!\n')
+        system('pause')
         return 1
 
     @staticmethod
     def remove():
         """remove um empregado do banco de dados"""
 
+        print(f"{13 * '='} Remover empregado {13 * '='}\n")
         Id = verifyEmployee()
         if Id != -1:
             opt = eval(input('Tem certeza que deseja remover esse empregado?\n'
@@ -56,15 +59,18 @@ class EmployeeCRUD:
                 Remove.syndicateData(Id)
                 Remove.scheduleData(Id)
 
-                print('Empregado removido com sucesso.')
+                print('Empregado removido com sucesso.\n')
+                system('pause')
                 return 1
             else:
-                print('Operação abortada!')
+                print('Operação abortada!\n')
+        system('pause')
 
     @staticmethod
     def update():
         """altera os dados de um empregado"""
 
+        print(f"{12 * '='} Atualizar empregado {12 * '='}\n")
         Id = verifyEmployee()
         if Id != -1:
             try:
@@ -73,7 +79,7 @@ class EmployeeCRUD:
                 # INTERAÇÃO COM O USUÁRIO
                 while True:
                     try:
-                        case = eval(input('Digite a opção que deseja alterar:\n'
+                        case = eval(input('\nDigite a opção que deseja alterar:\n'
                                           '1 - nome:\n'
                                           '2 - endereço:\n'
                                           '3 - tipo de empregado:\n'
@@ -86,6 +92,7 @@ class EmployeeCRUD:
                         changer = Change(employee)
                         changer.switch(case)
                         employee = changer.getEmployee()
+                        system('cls')
 
                     except SyntaxError:
                         print('Digite um número válido.\nErro #3')
@@ -99,14 +106,18 @@ class EmployeeCRUD:
                 # ATUALIZA OS DADOS DOS EMPREGADOS
                 data.dynamicDataBase[Id] = employee
                 data.DataBaseManager.writeDataBase()
-                print('Dados alterados com sucesso!!')
+                print('\nDados alterados com sucesso!!\n')
+                system('pause')
                 return 1
 
             except:
-                print('Não foi possível alterar os dados do empregado')
+                print('\nNão foi possível alterar os dados do empregado\n')
+        system('pause')
 
     @staticmethod
     def eraseDataBase():
+        print(f"{10 * '='} Deletar banco de dados!!! {10 * '='}\n")
+
         opt = eval(input('Tem certeza que deseja apagar o banco de dados?\n'
                          '1 - Sim. 0 - Não.\n'))
         if opt == 1:
@@ -114,9 +125,11 @@ class EmployeeCRUD:
                              '1 - Sim. 0 - Não.\n'))
             if opt == 1:
                 data.DataBaseManager.eraseDataBase()
-                print('Os dados foram deletados!!!')
+                print('Os dados foram deletados!!!\n')
+                system('pause')
                 return 1
             else:
-                print('Operação abortada.')
+                print('Operação abortada.\n')
         else:
-            print('Operação abortada.')
+            print('Operação abortada.\n')
+        system('pause')

@@ -2,7 +2,7 @@ from dataBase import data
 import time
 from employee.commissioned import Commissioned
 from management.extraModules.verifyEmployee import verifyEmployee
-from management.undoRedo import UndoRedo
+from os import system
 
 
 class SellResult:
@@ -10,15 +10,18 @@ class SellResult:
     @staticmethod
     def setSellResult():
         """lança um cartão de ponto"""
+        print(f"{13 * '='} Resultado de venda {14 * '='}")
+
         Id = verifyEmployee()
         if Id != -1:
             employee = data.dynamicDataBase[Id]
             if type(employee) != Commissioned:
-                print('Esse empregado não é comissionado')
+                print('\nEsse empregado não é comissionado\n')
+                system('pause')
                 return None
 
             try:
-                sell = eval(input('Digite o valor da venda:\n'))
+                sell = eval(input('\nDigite o valor da venda:\n'))
                 new_sellresult = time.strftime('%d/%m/%y %H:%M:%S') + '  R$ ' + str(sell)
                 sellresults = []
                 if Id in data.dynamicSellResults:
@@ -34,8 +37,10 @@ class SellResult:
                 data.dynamicDataBase[Id] = employee
                 data.DataBaseManager.writeDataBase()
 
-                print('Resultado de venda adicionado com sucesso!!')
+                print('Resultado de venda adicionado com sucesso!!\n')
+                system('pause')
                 return 1
 
             except:
-                print('Não foi possível lançar resultado de venda!!')
+                print('Não foi possível lançar resultado de venda!!\n')
+        system('pause')

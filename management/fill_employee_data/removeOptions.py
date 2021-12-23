@@ -1,5 +1,6 @@
 from management.extraModules.findInSyndicate import FindSyndicate
 from dataBase import data
+from os import system
 
 
 class Remove:
@@ -10,9 +11,9 @@ class Remove:
         try:
             data.dynamicDataBase.pop(Id)
             data.DataBaseManager.writeDataBase()
-            print('Empregado removido com sucesso')
         except:
-            print(f"Erro: não foi possível remover o empregado")
+            print(f"Erro: não foi possível remover o empregado\n")
+            system('pause')
 
     @staticmethod
     def timeCardsData(Id):

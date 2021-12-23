@@ -1,8 +1,8 @@
 from management.fill_schedule_data.fillData import FillSchedule
 from dataBase import data
 from management.extraModules.verifyEmployee import verifyEmployee
-from management.undoRedo import UndoRedo
 from management.printData import PrintData
+from os import system
 
 
 class Schedule:
@@ -10,6 +10,8 @@ class Schedule:
     @staticmethod
     def schedules():
         """lista as agendas de pagamento e escolhe uma"""
+        print(f"{16 * '='} Escolher agenda {16 * '='}")
+
         Id = verifyEmployee()
         if Id != -1:
             fill = FillSchedule()
@@ -20,12 +22,15 @@ class Schedule:
 
             data.scheduleDB[Id] = data.scheduleList[key]
             data.DataBaseManager.writeScheduleDB()
-            print('Pagamento agendado com sucesso.')
+            print('\nPagamento agendado com sucesso.\n')
+            system('pause')
             return 1
+        system('pause')
 
     @staticmethod
     def newSchedules():
         """cria novas agendas de pagamento"""
+        print(f"{15 * '='} Criar nova agenda {15 * '='}")
 
         newSchedule = FillSchedule()
         if newSchedule.list() == 1:
@@ -41,7 +46,9 @@ class Schedule:
             pass
         data.scheduleList[key + 1] = [description, type_, day]
         data.DataBaseManager.writeScheduleList()
-        print('Agenda criada com sucesso')
+
+        print('Agenda criada com sucesso\n')
+        system('pause')
         return 1
 
 
