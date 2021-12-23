@@ -7,6 +7,7 @@
 from dataBase import data
 from management.extraModules.exit import ZeroError
 from management.caseHandle import CaseHandle
+from management.undoRedo import UndoRedo
 import os
 
 
@@ -15,6 +16,7 @@ class Main:
     @staticmethod
     def menu():
         data.DataBaseManager.readDataBase()
+        UndoRedo.saveState()
         while True:
             try:
                 print(45*'=')
@@ -24,17 +26,23 @@ class Main:
                                   '4 - Lançar um resultado de venda\n'
                                   '5 - Lançar taxa de serviço\n'
                                   '6 - Alterar os dados do empregado\n'
-                                  '9 - Escolher agenda de pagamento\n'
-                                  '10 - Criar uma nova agenda de pagamento\n'
-                                  '11 - Listar todos os empregados\n'
-                                  '12 - Listar cartões de ponto\n'
-                                  '13 - Listar resultados de vendas\n'
-                                  '14 - Listar empregados associados ao sindicato\n'
-                                  '15 - Listar agenda de pagamento dos empregados\n'
-                                  '16 - Listar agendas\n'
+                                  '7 - Rodar folha de pagamento\n'
+                                  '8 - Escolher agenda de pagamento\n'
+                                  '9 - Criar uma nova agenda de pagamento\n'
+                                  '10 - Listar todos os empregados\n'
+                                  '11 - Listar cartões de ponto\n'
+                                  '12 - Listar resultados de vendas\n'
+                                  '13 - Listar empregados associados ao sindicato\n'
+                                  '14 - Listar agenda de pagamento dos empregados\n'
+                                  '15 - Listar agendas\n'
+                                  '16 - Listar contracheques\n'
+                                  '17 - Desfazer\n'
+                                  '18 - Refazer\n'
                                   '0 - sair\n'))
                 print(45*'=')
-                CaseHandle.switch(case)
+                done = CaseHandle.switch(case)
+                if done is not None:
+                    UndoRedo.saveState()
             except SyntaxError:
                 print('Digite um número válido.\nErro #1')
             except NameError:

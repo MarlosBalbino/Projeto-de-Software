@@ -12,18 +12,21 @@ class CaseHandle:
                   5: Service.setServiceFee,
                   6: EmployeeCRUD.update,
                   7: PayRoll.run,
-                  # 8: undoRedo.undo,
-                  # 8.1: undoRedo.redo,
-                  9: Schedule.schedules,
-                  10: Schedule.newSchedules,
-                  11: PrintData.printDataBase,
-                  12: PrintData.printTimeCards,
-                  13: PrintData.printSellResults,
-                  14: PrintData.printSyndicate,
-                  15: PrintData.printSchedules,
-                  16: PrintData.printScheduleList,
+                  8: Schedule.schedules,
+                  9: Schedule.newSchedules,
+                  10: PrintData.printDataBase,
+                  11: PrintData.printTimeCards,
+                  12: PrintData.printSellResults,
+                  13: PrintData.printSyndicate,
+                  14: PrintData.printSchedules,
+                  15: PrintData.printScheduleList,
+                  16: PrintData.printPaychecks,
+                  17: UndoRedo.undo,
+                  18: UndoRedo.redo,
                   -1: EmployeeCRUD.eraseDataBase,
                   -2: TimeCard.setHours,
                   -3: TimeCard.setExtra,
                   0: Exit.end}
-        switch[case]()
+        done = switch[case]()
+        if done is not None:
+            return -1

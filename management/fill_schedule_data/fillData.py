@@ -1,4 +1,5 @@
 from dataBase.data import scheduleList
+from management.extraModules.mycalendar import Calendar
 
 
 class InvalidDayError(Exception):
@@ -34,7 +35,7 @@ class FillSchedule:
                                             '3 - quarta\n'
                                             '4 - quinta\n'
                                             '5 - sexta\n'
-                                            '6 - sabado\n'))
+                                            '6 - sabado\n')) - 1
                     break
                 except:
                     print('Digite umas das opções acima')
@@ -61,12 +62,13 @@ class FillSchedule:
                 except:
                     print('Digite um número entre 1-31')
 
-            second_day = self.__day + 14
-            if second_day > 31:
-                second_day = second_day - 31
-                print(f'O pagamento será feito no dia {self.__day} e no dia {second_day} do próximo mês')
+            lastMonthDay = Calendar.lastMonthDay()
+            secondDay = self.__day + 14
+            if secondDay > lastMonthDay:
+                secondDay = secondDay - lastMonthDay
+                print(f'O pagamento será feito no dia {self.__day} e no dia {secondDay} do próximo mês')
             else:
-                print(f'O pagamento será feito no dia {self.__day} e no dia {second_day}')
+                print(f'O pagamento será feito no dia {self.__day} e no dia {secondDay}')
 
         self.__description = input('Digite uma descrição para a agenda (em string):\n')
 

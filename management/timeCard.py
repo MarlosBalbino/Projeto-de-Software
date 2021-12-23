@@ -4,6 +4,7 @@ from employee.hourly import Hourly
 from management.extraModules.mytime import Time
 from management.fill_employee_data.fillData import FillHourly
 from management.extraModules.verifyEmployee import verifyEmployee
+from management.undoRedo import UndoRedo
 
 
 class TimeCard:
@@ -26,9 +27,9 @@ class TimeCard:
             h_final = Time(h_final)
             h_initial = Time(h_initial)
             delta_h = h_final - h_initial
-            extra_h = calcExtraWorkingHours(delta_h)
+            extra_h = calcExtraWorkingHours(delta_h.getHours())
             employee.setWorkingHours(delta_h.getHours())
-            employee.setExstraWorkingHours(extra_h)
+            employee.setExtraWorkingHours(extra_h)
             data.dynamicDataBase[Id] = employee
             data.DataBaseManager.writeDataBase()
 
@@ -56,6 +57,7 @@ class TimeCard:
                 data.dynamicTimeCards[Id] = timecards
                 data.DataBaseManager.writeTimeCard()
                 print('Cartão de ponto adicionado com sucesso!!')
+                return 1
 
             except:
                 print('Não foi possível lançar cartão de ponto.')
@@ -90,6 +92,6 @@ class TimeCard:
             fill.setExtraWorkingHours()
             extra_h = fill.getExtraWorkingHours()
 
-            employee.setExstraWorkingHours(extra_h)
+            employee.setExtraWorkingHours(extra_h)
             data.dynamicDataBase[Id] = employee
             data.DataBaseManager.writeDataBase()

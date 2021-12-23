@@ -62,7 +62,7 @@ class PrintData:
             empAux = data.dynamicSyndicateDB[syndicateId]
             Id = empAux.getId()
             emp = data.dynamicDataBase[Id]
-            print(f'{emp.getName()}')
+            print(emp.getName())
             print(f'{empAux.getData()}\n')
 
     @staticmethod
@@ -81,7 +81,23 @@ class PrintData:
 
     @staticmethod
     def printScheduleList():
+        types = {1: 'semanalmente', 2: 'mensalmente', 3: 'bi-mensalmente'}
         print(f"{18*'='} Agendas {18*'='}\n")
         for value in data.scheduleList.values():
-            print(value[0])
+            print(f'{value[0]} - {types[value[1]]}')
         print()
+
+    @staticmethod
+    def printPaychecks():
+        """imprime os dados relacionados ao sindicato"""
+
+        if not data.paycheckDB:
+            print('Não há contracheques registrados')
+            return None
+
+        for Id in data.paycheckDB:
+            paycheck = data.paycheckDB[Id]
+            print(f"{16 * '='} Contracheque {16 * '='}")
+            print(paycheck.payCheck())
+            print(paycheck.printDiscounts())
+            print()

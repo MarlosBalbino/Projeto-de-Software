@@ -1,15 +1,16 @@
 from employee.Imports import *
+from management.linkedlist.linkedList import LinkedList
 import os
 
 dynamicDataBase = {}
 dynamicTimeCards = {}
 dynamicSellResults = {}
 dynamicSyndicateDB = {}
-
 scheduleDB = {}
-scheduleList = {1: ['toda sexta-feira', 'semanalmente', 'sexta'],
-                2: ['ultimo dia do mês', 'mensalmente', 31],
-                3: ['a cada duas sextas-feiras', 'bi-mensalmente', 'sexta']}
+scheduleList = {1: ['toda sexta-feira', 1, 4],
+                2: ['ultimo dia do mês', 2, 31],
+                3: ['a cada duas sextas-feiras', 3, 24]}
+paycheckDB = {}
 
 
 class DataBaseManager:
@@ -70,15 +71,17 @@ class DataBaseManager:
             except FileNotFoundError:
                 pass
 
+            # LÊ OS CONTRACHEQUES DOS EMPREGADOS
+            try:
+                global paycheckDB
+                file = open(f'dataBase\\paycheck.db', 'r', encoding='utf8')
+                paycheckDB = eval(file.read())
+                file.close()
+            except FileNotFoundError:
+                pass
+
         except FileNotFoundError:
             pass
-
-    @staticmethod
-    def writeDataBaseExe(db_name):
-        file = open(f"dataBase\\{db_name}.db", 'w', encoding='utf8')
-        file.write(f"{eval(db_name)}")
-        file.flush()
-        file.close()
 
     @staticmethod
     def writeDataBase():
@@ -123,6 +126,23 @@ class DataBaseManager:
         file.close()
 
     @staticmethod
+    def writePaycheckDB():
+        file = open(f'dataBase\\paycheck.db', 'w', encoding='utf8')
+        file.write(f"{paycheckDB}")
+        file.flush()
+        file.close()
+
+    @classmethod
+    def writeAll(cls):
+        cls.writeDataBase()
+        cls.writeTimeCard()
+        cls.writeSellResults()
+        cls.writeSyndicateDB()
+        cls.writeScheduleDB()
+        cls.writeScheduleList()
+        cls.writePaycheckDB()
+
+    @staticmethod
     def eraseDataBase():
         try:
             global dynamicDataBase
@@ -156,9 +176,16 @@ class DataBaseManager:
             pass
         try:
             global scheduleList
-            scheduleList = {}
+            scheduleList = {1: ['toda sexta-feira', 1, 4],
+                            2: ['ultimo dia do mês', 2, 31],
+                            3: ['a cada duas sextas-feiras', 3, 24]}
             os.remove('dataBase\\schedule_list.db')
         except OSError:
             pass
-
+        try:
+            global paycheckDB
+            paycheckDB = {}
+            os.remove('dataBase\\paycheck.db')
+        except OSError:
+            pass
 

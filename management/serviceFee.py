@@ -1,11 +1,8 @@
 from management.extraModules.verifyEmployee import verifyEmployee
 from management.extraModules.findInSyndicate import FindSyndicate
+from management.undoRedo import UndoRedo
 from employee.Imports import *
 from dataBase import data
-
-
-def nothing():
-    Syndicate()
 
 
 class Service:
@@ -27,7 +24,9 @@ class Service:
                         break
                     except:
                         print('Digite um número inteiro ou ponto flutuante')
-
+                data.dynamicSyndicateDB[syndicateId] = syndicateEmp
                 data.DataBaseManager.writeSyndicateDB()
+                print('Taxa de serviço cadastrada.')
+                return 1
             else:
                 print('Empregado não possui vinculo com o sindicato')

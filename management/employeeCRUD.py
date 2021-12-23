@@ -3,6 +3,7 @@ from management.fill_employee_data.updateOptions import Change
 from management.fill_employee_data.removeOptions import Remove
 from management.extraModules.verifyEmployee import verifyEmployee
 from management.extraModules.exit import ZeroError
+from management.undoRedo import UndoRedo
 from dataBase import data
 
 
@@ -37,6 +38,7 @@ class EmployeeCRUD:
             fill.signIn(Id)
 
         print('Empregado cadastrado com sucesso!!')
+        return 1
 
     @staticmethod
     def remove():
@@ -53,6 +55,9 @@ class EmployeeCRUD:
                 Remove.sellResultsData(Id)
                 Remove.syndicateData(Id)
                 Remove.scheduleData(Id)
+
+                print('Empregado removido com sucesso.')
+                return 1
             else:
                 print('Operação abortada!')
 
@@ -95,6 +100,7 @@ class EmployeeCRUD:
                 data.dynamicDataBase[Id] = employee
                 data.DataBaseManager.writeDataBase()
                 print('Dados alterados com sucesso!!')
+                return 1
 
             except:
                 print('Não foi possível alterar os dados do empregado')
@@ -109,6 +115,7 @@ class EmployeeCRUD:
             if opt == 1:
                 data.DataBaseManager.eraseDataBase()
                 print('Os dados foram deletados!!!')
+                return 1
             else:
                 print('Operação abortada.')
         else:

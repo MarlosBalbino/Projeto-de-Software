@@ -2,6 +2,7 @@ from dataBase import data
 import time
 from employee.commissioned import Commissioned
 from management.extraModules.verifyEmployee import verifyEmployee
+from management.undoRedo import UndoRedo
 
 
 class SellResult:
@@ -34,6 +35,7 @@ class SellResult:
                 data.DataBaseManager.writeDataBase()
 
                 print('Resultado de venda adicionado com sucesso!!')
+                return 1
 
             except:
                 print('Não foi possível lançar resultado de venda!!')
